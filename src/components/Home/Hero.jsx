@@ -134,7 +134,7 @@ export default function Hero() {
             to="/contact" 
             className="btn-primary text-base w-full sm:w-auto group"
           >
-            <span className="relative z-10 flex items-center gap-2">
+            <span className="relative z-10 flex items-center justify-center gap-2">
               Book Free Trial Class
               <svg 
                 className="w-4 h-4 transition-transform duration-300 group-hover:translate-x-1" 
