@@ -1,24 +1,46 @@
-import { useState } from 'react'
+import { useState, useRef } from 'react'
+import emailjs from '@emailjs/browser'
+import ContactInfo from './ContactInfo.jsx'
+
+// 🔧 CONFIG: Replace these with your EmailJS credentials
+const EMAILJS_PUBLIC_KEY = '-Wi8G1amDHRSX4oiN'
+const EMAILJS_SERVICE_ID = 'service_32mxewg'
+const EMAILJS_TEMPLATE_ID = 'template_bgdgz47'
 
 export default function ContactForm() {
-  const [form, setForm] = useState({ name: '', email: '', phone: '', subject: '', message: '' })
+  const formRef = useRef(null)
+  const [form, setForm] = useState({ from_name: '', from_email: '', phone: '', subject: '', message: '' })
   const [focused, setFocused] = useState({})
   const [submitted, setSubmitted] = useState(false)
   const [loading, setLoading] = useState(false)
+  const [error, setError] = useState(null)
 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value })
+    setError(null)
   }
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault()
     setLoading(true)
-    setTimeout(() => {
-      setLoading(false)
+    setError(null)
+
+    try {
+      await emailjs.sendForm(
+        EMAILJS_SERVICE_ID,
+        EMAILJS_TEMPLATE_ID,
+        formRef.current,
+        EMAILJS_PUBLIC_KEY
+      )
       setSubmitted(true)
-      setForm({ name: '', email: '', phone: '', subject: '', message: '' })
-      setTimeout(() => setSubmitted(false), 5000)
-    }, 1500)
+      setForm({ from_name: '', from_email: '', phone: '', subject: '', message: '' })
+      setTimeout(() => setSubmitted(false), 6000)
+    } catch (err) {
+      console.error('Email failed:', err)
+      setError('Failed to send message. Please try again or contact via WhatsApp.')
+    } finally {
+      setLoading(false)
+    }
   }
 
   const inputClasses = (field) =>
@@ -29,71 +51,19 @@ export default function ContactForm() {
     }`
 
   return (
-    <section className="section bg-[var(--bg-alt)] relative overflow-hidden">
+    <section className="section bg-[var(--bg)] relative overflow-hidden">
       <div className="absolute -top-32 -right-32 w-96 h-96 bg-[var(--sky-500)]/8 rounded-full blur-3xl" />
       <div className="absolute -bottom-32 -left-32 w-96 h-96 bg-[var(--purple-500)]/8 rounded-full blur-3xl" />
 
       <div className="container-custom px-4 sm:px-6 lg:px-8 relative z-10">
-        <div className="grid lg:grid-cols-2 gap-12 lg:gap-20 items-center">
+        <div className="grid lg:grid-cols-2 gap-12 lg:gap-20 items-start">
           {/* Left: Info */}
-          <div className="reveal">
-            <span className="inline-block px-4 py-1.5 rounded-full text-xs font-semibold tracking-wider uppercase bg-gradient-to-r from-[var(--sky-500)]/10 to-[var(--purple-500)]/10 text-[var(--primary-dark)] mb-4 border border-[var(--sky-500)]/20">
-              Get In Touch
-            </span>
-            <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-4">
-              Start Your <span className="gradient-text">Journey</span> Today
-            </h2>
-            <p className="text-[var(--text-secondary)] text-lg mb-10">
-              Have questions about a subject or ready to book your free trial class? Drop a message and I will respond within a few hours.
-            </p>
-
-            <div className="space-y-6">
-              {[
-                {
-                  icon: (
-                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-                    </svg>
-                  ),
-                  label: 'Email',
-                  value: 'hello@starcoaching.com',
-                },
-                {
-                  icon: (
-                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
-                    </svg>
-                  ),
-                  label: 'WhatsApp',
-                  value: '+92 300 1234567',
-                },
-                {
-                  icon: (
-                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M15 10.5a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z" />
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1115 0z" />
-                    </svg>
-                  ),
-                  label: 'Location',
-                  value: 'Karachi, Pakistan (Online & Select In-Person)',
-                },
-              ].map((item) => (
-                <div key={item.label} className="flex items-start gap-4 group">
-                  <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-[var(--sky-500)] to-[var(--purple-500)] flex items-center justify-center text-white shadow-lg group-hover:scale-110 transition-transform duration-300">
-                    {item.icon}
-                  </div>
-                  <div>
-                    <p className="text-sm font-semibold text-[var(--text)]">{item.label}</p>
-                    <p className="text-[var(--text-secondary)]">{item.value}</p>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
+          <ContactInfo />
 
           {/* Right: Form */}
           <div className="reveal">
             <div className="bg-[var(--surface)] rounded-3xl border border-[var(--border)] shadow-xl p-6 sm:p-8 lg:p-10 relative overflow-hidden">
+              {/* Success Overlay */}
               <div
                 className={`absolute inset-0 bg-[var(--surface)] z-20 flex flex-col items-center justify-center transition-all duration-700 ${
                   submitted ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'
@@ -105,39 +75,39 @@ export default function ContactForm() {
                   </svg>
                 </div>
                 <h3 className="text-2xl font-bold mb-2 animate-slide-up">Message Sent!</h3>
-                <p className="text-[var(--text-secondary)] animate-slide-up" style={{ animationDelay: '0.1s' }}>
-                  I will get back to you shortly.
+                <p className="text-[var(--text-secondary)] text-center max-w-xs animate-slide-up" style={{ animationDelay: '0.1s' }}>
+                  Thank you! I'll get back to you within a few hours.
                 </p>
               </div>
 
-              <form onSubmit={handleSubmit} className="space-y-5 relative z-10">
+              <form ref={formRef} onSubmit={handleSubmit} className="space-y-5 relative z-10">
                 <div className="grid sm:grid-cols-2 gap-5">
                   <div>
                     <label className="block text-sm font-medium text-[var(--text)] mb-1.5">Full Name</label>
                     <input
                       type="text"
-                      name="name"
+                      name="from_name"
                       required
                       placeholder="Your name"
-                      value={form.name}
+                      value={form.from_name}
                       onChange={handleChange}
-                      onFocus={() => setFocused({ ...focused, name: true })}
-                      onBlur={() => setFocused({ ...focused, name: false })}
-                      className={inputClasses('name')}
+                      onFocus={() => setFocused({ ...focused, from_name: true })}
+                      onBlur={() => setFocused({ ...focused, from_name: false })}
+                      className={inputClasses('from_name')}
                     />
                   </div>
                   <div>
                     <label className="block text-sm font-medium text-[var(--text)] mb-1.5">Email</label>
                     <input
                       type="email"
-                      name="email"
+                      name="from_email"
                       required
                       placeholder="you@example.com"
-                      value={form.email}
+                      value={form.from_email}
                       onChange={handleChange}
-                      onFocus={() => setFocused({ ...focused, email: true })}
-                      onBlur={() => setFocused({ ...focused, email: false })}
-                      className={inputClasses('email')}
+                      onFocus={() => setFocused({ ...focused, from_email: true })}
+                      onBlur={() => setFocused({ ...focused, from_email: false })}
+                      className={inputClasses('from_email')}
                     />
                   </div>
                 </div>
@@ -148,7 +118,7 @@ export default function ContactForm() {
                     <input
                       type="tel"
                       name="phone"
-                      placeholder="+92 300 1234567"
+                      placeholder="0342-6556877"
                       value={form.phone}
                       onChange={handleChange}
                       onFocus={() => setFocused({ ...focused, phone: true })}
@@ -157,27 +127,18 @@ export default function ContactForm() {
                     />
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-[var(--text)] mb-1.5">Subject / Level</label>
-                    <select
+                    <label className="block text-sm font-medium text-[var(--text)] mb-1.5">Subject</label>
+                    <input
+                      type="text"
                       name="subject"
                       required
+                      placeholder="e.g. Math Tuition for Grade 9"
                       value={form.subject}
                       onChange={handleChange}
                       onFocus={() => setFocused({ ...focused, subject: true })}
                       onBlur={() => setFocused({ ...focused, subject: false })}
-                      className={`${inputClasses('subject')} appearance-none cursor-pointer`}
-                    >
-                      <option value="">Select subject</option>
-                      <option value="olevel-math">O-Level Mathematics</option>
-                      <option value="olevel-physics">O-Level Physics</option>
-                      <option value="olevel-chem">O-Level Chemistry</option>
-                      <option value="olevel-bio">O-Level Biology</option>
-                      <option value="alevel-math">A-Level Mathematics</option>
-                      <option value="alevel-physics">A-Level Physics</option>
-                      <option value="matric">Matric Science</option>
-                      <option value="fsc">FSc Pre-Med/Eng</option>
-                      <option value="other">Other</option>
-                    </select>
+                      className={inputClasses('subject')}
+                    />
                   </div>
                 </div>
 
@@ -195,6 +156,12 @@ export default function ContactForm() {
                     className={`${inputClasses('message')} resize-none`}
                   />
                 </div>
+
+                {error && (
+                  <div className="p-4 rounded-xl bg-red-500/10 border border-red-500/20 text-red-400 text-sm">
+                    {error}
+                  </div>
+                )}
 
                 <button
                   type="submit"

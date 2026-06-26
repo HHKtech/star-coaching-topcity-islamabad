@@ -1,35 +1,46 @@
 import { useState, useEffect, useRef } from 'react'
+import { Link } from 'react-router-dom'
 
 const faqs = [
   {
     id: 1,
-    question: 'Which subjects and grades do you teach?',
-    answer: 'I specialize in O-Level, A-Level, and Matric subjects including Mathematics, Physics, Chemistry, and Biology. Both Cambridge and local board syllabi are covered.',
+    question: 'Which areas in Islamabad do you cover for home tuition?',
+    answer: 'I provide home tuition in Mumtaz City, TopCity, and Airport Green Garden. If you are nearby, feel free to reach out and we can discuss availability.',
   },
   {
     id: 2,
-    question: 'Are classes online or in-person?',
-    answer: 'Both! I offer online classes via Zoom for students anywhere in Pakistan, and in-person sessions in Karachi for select subjects and locations.',
+    question: 'Which grades and subjects do you teach?',
+    answer: 'I teach students from Grade 5 to Matric. Subjects include Science (Physics, Chemistry, Biology), Mathematics, Urdu, and English.',
   },
   {
     id: 3,
-    question: 'How much is the fee?',
-    answer: 'Fees vary by subject and level. O-Level and Matric classes are affordably priced, with discounted packages for long-term students. Contact me for a custom quote.',
+    question: 'Do you offer group classes or batch sessions?',
+    answer: 'No, I do not follow a rigid batch system. Every student gets one-on-one personalized attention at their own pace for maximum learning.',
   },
   {
     id: 4,
-    question: 'Can I get a trial class first?',
-    answer: 'Absolutely! I offer a free trial class so you can see my teaching style and decide if it is the right fit before committing.',
+    question: 'Can I book a free trial class?',
+    answer: 'Absolutely! I offer a free trial class so you can experience my teaching style and see if it is the right fit for your child before committing.',
   },
   {
     id: 5,
-    question: 'Do you provide notes and past papers?',
-    answer: 'Yes, I provide curated notes, topical worksheets, and past paper practice sets as part of the course material — no extra charges.',
+    question: 'How do you handle weak topics or difficult chapters?',
+    answer: 'I identify weak topics through regular assessments and create targeted improvement plans with custom worksheets for practice and reinforcement.',
   },
   {
     id: 6,
-    question: 'What if I miss a class?',
-    answer: 'No worries. Recorded sessions are available for online classes, and we can reschedule in-person sessions with advance notice.',
+    question: 'Do you provide support outside of class hours?',
+    answer: 'Yes, students get direct WhatsApp support for instant doubt clarification. Got a question before an exam? I am just a message away.',
+  },
+  {
+    id: 7,
+    question: 'Do you offer exam crash courses?',
+    answer: 'Yes, I offer intensive 4–8 week revision programs before final exams with rapid concept reviews, predicted questions, and timed mock tests.',
+  },
+  {
+    id: 8,
+    question: 'What is your teaching experience?',
+    answer: 'I have 3+ years of dedicated tutoring experience, successfully helping students improve their performance and achieve outstanding grades in exams.',
   },
 ]
 
@@ -135,15 +146,15 @@ export default function FAQWidget() {
 
         {/* Footer */}
         <div className="p-4 border-t border-[var(--border)] bg-[var(--bg-alt)]">
-          <a
-            href="/contact"
+          <Link
+            to="/contact"
             className="flex items-center justify-center gap-2 w-full py-2.5 rounded-xl bg-gradient-to-r from-[var(--sky-500)] to-[var(--purple-500)] text-white text-sm font-semibold hover:shadow-lg hover:shadow-[var(--sky-500)]/25 transition-all"
           >
             <span>Still have questions?</span>
             <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3" />
             </svg>
-          </a>
+          </Link>
         </div>
       </div>
 
@@ -159,10 +170,12 @@ export default function FAQWidget() {
 
         {/* Notification dot */}
         {hasNotification && (
-<span className="absolute -top-1 -right-1 w-4 h-4 bg-red-500 rounded-full border-2 border-[var(--bg)] animate-pulse" />        )}
+          <span className="absolute -top-1 -right-1 w-4 h-4 bg-red-500 rounded-full border-2 border-[var(--bg)] animate-pulse" />
+        )}
 
         {/* Tooltip */}
-<span className="absolute right-16 top-1/2 -translate-y-1/2 px-3 py-1.5 rounded-lg bg-[var(--surface)] text-[var(--text)] border border-[var(--border)] shadow-lg text-xs font-medium whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">          Have a question?
+        <span className="absolute right-16 top-1/2 -translate-y-1/2 px-3 py-1.5 rounded-lg bg-[var(--surface)] text-[var(--text)] border border-[var(--border)] shadow-lg text-xs font-medium whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
+          Have a question?
         </span>
       </button>
     </div>

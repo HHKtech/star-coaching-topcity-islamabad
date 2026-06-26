@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { Link, useLocation } from 'react-router-dom'
-import starLogo from '../assets/star_logo.svg'
+import starLogo from '../../assets/star_logo.svg'
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false)
@@ -30,7 +30,7 @@ export default function Navbar() {
   const navLinks = [
     { name: 'Home', path: '/' },
     { name: 'About', path: '/about' },
-    { name: 'Services', path: '/#services', onClick: handleServicesClick },
+    { name: 'Services', path: '/services'},
     { name: 'Contact', path: '/contact' },
   ]
 
@@ -41,11 +41,13 @@ export default function Navbar() {
 
   return (
     <nav
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
-        scrolled ? 'glass shadow-lg py-3' : 'bg-transparent py-5'
+      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 border-b border-black/5 dark:border-white/5 backdrop-blur-md ${
+    scrolled 
+      ? 'glass shadow-lg py-3' 
+      : 'bg-white/40 dark:bg-slate-950/40 py-5 shadow-[0_1px_3px_rgba(0,0,0,0.05)] dark:shadow-[0_1px_3px_rgba(0,0,0,0.3)]'
       }`}
     >
-      <div className="container-custom px-4 sm:px-6 lg:px-8">
+      <div className="w-full px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between">
           <Link to="/" className="flex items-center gap-3 group">
             <div className="relative w-10 h-10 flex items-center justify-center">
@@ -61,7 +63,7 @@ export default function Navbar() {
             </div>
           </Link>
 
-          <div className="hidden md:flex items-center gap-8">
+          <div className="hidden md:flex items-center gap-8 ">
             {navLinks.map((link) => (
               <Link
                 key={link.name}

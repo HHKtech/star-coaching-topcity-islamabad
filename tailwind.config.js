@@ -9,4 +9,8 @@ export default {
     extend: {},
   },
   plugins: [],
+  fontFamily: {
+  sans: ['Inter', 'sans-serif'],
+  serif: ['Playfair Display', 'serif'],
+}
 }
